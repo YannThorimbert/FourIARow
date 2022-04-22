@@ -8,136 +8,33 @@
 
     <body>
         <div id="divBoard"></div>
-        <div id="infos"></div>
+        <div id="settings">
+            <span class="SettingSpan">Play red </span>
+            <input type="checkbox" id="playRed" onclick="changePlayer()" checked><br>
+
+            <span class="SettingSpan">No IA </span>
+            <input type="checkbox" id="noIA" onclick="this.blur()" ><br>
+
+            <span class="SettingSpan">Heuristic start </span>
+            <input type="checkbox" id="heuristicStart" onclick="changeHeuristicStart()" checked><br>
+
+            <span class="SettingSpan">Search depth </span>
+            <select id="depthMode" onchange="changeDepthMode()">
+              <option value="adaptive">Adaptive</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select><br>
+
+            <button onclick="clearGame();refreshDisplay();this.blur()"> Clear board </button>
+        </div>
+        <div id="infos"> Infos about IA will be displayed here </div>
     </body>
 
 
     <script src="ia.js"></script>
 
 
-    <script>
-        const divBoard = document.getElementById("divBoard")
-
-        function displayEndOfGameIfNeeded(){
-            if(actions.length == NPLAYS){
-                alert("PARTIE FINIE (egalité)")
-                return false
-            }
-            else if(thereIsAWinner()){
-                nextPlayer()
-                alert(color[currentPlayer]+" GAGNE")
-                return false
-            }
-            return true
-        }
-
-        function handleKeyDown(event){
-            const key = event.key
-
-            // console.log(key)
-
-            // const {code} = event //for ignoring keyboard layout
-            // console.log(code)
-
-            switch (key) {
-                case "ArrowLeft":
-                    userCursor = Math.max(0, userCursor-1)
-                    break
-                case "ArrowRight":
-                    userCursor = Math.min(LAST_COLUMN, userCursor+1)
-                    break
-                case " ":
-                    var valid = play(userCursor) >= 0
-                    var shouldContinue = displayEndOfGameIfNeeded()
-                    console.log(valid, shouldContinue)
-                    if(shouldContinue && valid){
-                        j = iaChooseColumn()
-                        if(j<0)
-                            alert("Bug j < 0")
-                        play(j)
-                        displayEndOfGameIfNeeded()
-                    }
-                    break
-                case "Escape":
-                    if(actions.length>0)
-                        undo()
-                    break
-            }
-            refreshDisplay()
-        }
-
-        document.body.addEventListener('keydown', handleKeyDown)
-
-        const str = {"1":"O", "-1":"X", "0":"&nbsp;"}
-        const color = {"1":"Red", "-1":"Blue", "0":""}
-
-        function showCursor(){
-            var divCursor = document.createElement("div")
-            divCursor.className = "BoardCursorLine"
-            divBoard.appendChild(divCursor)
-            for(var j=0; j<NX; j++){
-                var cursVal = document.createElement("span")
-                cursVal.className = "Cursor Val"
-                if(j == userCursor && currentPlayer>0){
-                    cursVal.className += " " + color[currentPlayer]
-                }
-                divCursor.appendChild(cursVal)
-            }
-        }
-
-        function showBoard(){
-            for(var i=0; i<NY; i++){
-                var line = board[i]
-                var divLine = document.createElement("div")
-                divLine.className = "BoardLine"
-                divBoard.appendChild(divLine)
-                for(var j=0; j<NX; j++){
-                    var value = line[j]
-                    var spanVal = document.createElement("span")
-                    spanVal.className = "Board Val"
-                    if(j == actions[actions.length-1] && i == freeLine[j]+1)
-                        spanVal.className += " Last"
-                    spanVal.className += " " + color[value]
-                    divLine.appendChild(spanVal)
-                }
-            }
-        }
-        divBoard.addEventListener('keydown', function(event) {
-            const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-        });
-
-        function refreshDisplay(){
-            divBoard.innerHTML = ""
-            showCursor()
-            showBoard()
-        }
-
-        function clearGame(){
-            for(var i=0; i<NX; i++)
-                freeLine.push(LAST_LINE)
-            actions = []
-            for(var i=0; i<NY; i++)
-                for(var j=0; j<NX; j++)
-                    board[i][j] = 0
-        }
-
-
-        board = [[0,  0,  0,  1,  0,  1,  1],
-                 [0,  0,  0, -1,  1,  1,  0],
-                 [0,  0,  1,  1,  1,  1,  1],
-                 [0,  0,  0,  1, -1, -1,  1],
-                 [0,  0,  0,  1,  1,  1, -1],
-                 [0,  0,  1, -1,  1,  1,  1]]
-
-        // console.log(controlDiagonal(LAST_LINE,1))
-        // refreshDisplay()
-
-        // console.log(controlLine(0), controlLine(5), controlLine(4))
-        // console.log(controlColumn(0), controlColumn(3), controlColumn(4))
-
-        clearGame()
-
-        refreshDisplay()
-
-    </script>
+    <script src="ui.js"></script>
 </html>

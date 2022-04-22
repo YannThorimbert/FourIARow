@@ -4,12 +4,56 @@ body{
     overflow: hidden;
 }
 
+#settings{
+    margin:auto;
+    background-color: gray;
+    padding:10px;
+
+    float:left;
+    display:inline-block;
+
+    box-shadow:  3px 3px 3px black;
+    border-style: solid;
+    border-radius: 20px;
+
+    font-size: 0.8em;
+    margin-right: 50px;
+}
+
+#infos{
+    margin:auto;
+    background-color: gray;
+    padding:10px;
+
+    float:left;
+    display:inline-block;
+
+    box-shadow:  3px 3px 3px black;
+    border-style: solid;
+    border-radius: 20px;
+    min-width: 200px;
+
+    font-size: 0.5em;
+    margin-top: 20px;
+    max-width: 400px;
+}
+
+.SettingSpan{
+    font-size: 0.5em;
+    max-width: 400px;
+
+}
+
 #divBoard{
+    float:left;
     margin:auto;
     background-color: gray;
     padding:10px;
     text-align: center;
-    max-width:500px;
+    /* max-width:500px; */
+
+    margin-right: 50px;
+    margin-left: 20%;
 
     box-shadow:  3px 3px 3px black;
     border-style: solid;
@@ -22,21 +66,26 @@ body{
 
 .BoardLine{
     margin: 10px;
+    margin-top:0px;
+    margin-bottom:0px;
 }
 
 
 .Val{
     display:inline-block;
     margin:3px;
-    min-width: 50px;
+    min-width: 80px;
+    margin-right: 10px;
 }
 
 .Board{
     background-color:cyan;
     border-style: solid;
     border-radius: 50%;
-    min-height: 50px;
+    min-height: 80px;
     box-shadow: inset -3px -3px 3px black;
+    margin-top:0px;
+    margin-bottom:0px;
 }
 
 .Cursor{
@@ -56,4 +105,14 @@ body{
 
 .Last{
     border-color: yellow;
+}
+
+.Next{
+    border-color: green;
+    background-color: rgb(200,200,200);
+    box-shadow: none;
+}
+
+button{
+    font-size: 0.5em;
 }

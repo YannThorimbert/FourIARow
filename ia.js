@@ -7,6 +7,8 @@ const CENTERX =  Math.floor( NX/2 )
 const CENTERY = Math.floor( NY/2 )
 const N = 4
 var maxDepth = 7
+var depthMode = "adaptive"
+var heuristicStart = true
 const MIN_SCORE = 0.01
 
 
@@ -15,6 +17,7 @@ for(var i=0; i<NX; i++)
     freeLine.push(LAST_LINE)
 
 var actions = []
+var humanPlayer = 1
 var currentPlayer = 1
 var userCursor = 0
 
@@ -162,7 +165,7 @@ function iaChooseColumnHeuristic(){
 
 counter = 0
 //getScore must left the state unchanged after the call
-function getScore(j, depth, limit){
+function getScore(j, depth, limit){ //core of the algorithm
     counter ++
     i = play(j)
     if(i < 0) //cannot play in column j, no need to undo
@@ -180,7 +183,8 @@ function getScore(j, depth, limit){
     }
     if(depth >= maxDepth){ //too deep in the IA tree to produce children
         undo()
-        return  0.1 + Math.random()*0.8
+        // return 0.5
+        return  0.45 + Math.random()*0.1
     }
     //Now serious things start : if we are here, children necessarily exist (no winner, no draw)
     var score = 1 - INITIAL_LIMIT //0.99
@@ -205,11 +209,13 @@ function getScore(j, depth, limit){
 
 const INITIAL_LIMIT = 0.01
 function iaChooseColumn(){
-
-    if(actions.length < 3)
+    var infos = document.getElementById("infos")
+    if(depthMode != "adaptive")
+        maxDepth = Number(depthMode)
+    if(actions.length < 3 && heuristicStart){
+        infos.innerHTML = "Heuristic start"
         return iaChooseColumnHeuristic()
-
-    console.log("***", maxDepth)
+    }
     counter = 0
     var bestScore = -1
     var bestColumn = -1
@@ -221,17 +227,15 @@ function iaChooseColumn(){
             bestColumn = j
         }
     }
-
-    if(bestScore<0.998 && counter<1e5 && maxDepth<NPLAYS){
+    if(depthMode == "adaptive" && bestScore<0.998 && counter<1e5 && maxDepth<NPLAYS){
         maxDepth ++
         return iaChooseColumn()
     }
-    else if(counter>1e6)
+    else if(depthMode == "adaptive" && counter>1e6)
         maxDepth --
 
     console.log("IA plays", bestColumn, bestScore, maxDepth)
     console.log("counter", counter)
-    var infos = document.getElementById("infos")
     infos.innerHTML = "IA score = " + Math.round(bestScore * 100) / 100
                                                 + " (" + counter + " steps, depth = " + maxDepth + ")"
     if(bestScore<=0.011)
